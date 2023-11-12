@@ -1,0 +1,69 @@
+int Brain_precision = 0, Console_precision = 0;
+
+float myVariable;
+
+// "when started" hat block
+int whenStarted1() {
+  Brain.Screen.print("Controls:");
+  Brain.Screen.newLine();
+  Brain.Screen.print("L3: Left Side Forward / Turn RIght");
+  Brain.Screen.newLine();
+  Brain.Screen.print("R3: Right Side Forward / Turn Left");
+  Brain.Screen.newLine();
+  Brain.Screen.print("Upper E Button: Reveal Stat Indicators");
+  Brain.Screen.newLine();
+  Brain.Screen.print("Lower E Button: Hide Stat Indicators");
+  return 0;
+}
+
+// "when Controller ButtonEUp pressed" hat block
+void onevent_ControllerButtonEUp_pressed_0() {
+  if (Controller.ButtonEUp.pressing()) {
+    Brain.Screen.newLine();
+    Brain.Screen.print("Stats:");
+    Brain.Screen.newLine();
+    Brain.Screen.print("Brain Battery-");
+    Brain.Screen.newLine();
+    Brain.Screen.print(printToBrain_numberFormat(), static_cast<float>(Brain.Battery.capacity(percent)));
+    Brain.Screen.newLine();
+    Brain.Screen.print("Drive Velocity-");
+    Brain.Screen.newLine();
+    Brain.Screen.print(printToBrain_numberFormat(), static_cast<float>(Drivetrain.velocity(percent)));
+    Brain.Screen.newLine();
+    Brain.Screen.print("Drive Heading-");
+    Brain.Screen.newLine();
+    Brain.Screen.print(printToBrain_numberFormat(), static_cast<float>(Drivetrain.heading(degrees)));
+  }
+}
+
+// "when started" hat block
+int whenStarted2() {
+  Drivetrain.setDriveVelocity(100.0, percent);
+  Drivetrain.setTurnVelocity(100.0, percent);
+  return 0;
+}
+
+// "when Controller ButtonEDown pressed" hat block
+void onevent_ControllerButtonEDown_pressed_0() {
+  Brain.Screen.clearLine(6);
+  Brain.Screen.clearLine(7);
+  Brain.Screen.clearLine(8);
+  Brain.Screen.clearLine(9);
+  Brain.Screen.clearLine(10);
+  Brain.Screen.clearLine(11);
+  Brain.Screen.clearLine(12);
+}
+
+
+int main() {
+  // Calibrate the Drivetrain Gyro
+  calibrateDrivetrain();
+
+  // register event handlers
+  Controller.ButtonEUp.pressed(onevent_ControllerButtonEUp_pressed_0);
+  Controller.ButtonEDown.pressed(onevent_ControllerButtonEDown_pressed_0);
+
+  wait(15, msec);
+  vex::task ws1(whenStarted2);
+  whenStarted1();
+}
